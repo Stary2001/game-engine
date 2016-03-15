@@ -28,6 +28,8 @@ public:
 	void use();
 	void bind_frag(GLuint pos, std::string n);
 	GLuint get_attrib(std::string n);
+	GLuint get_uniform(std::string n);
+
 private:
 	GLuint program;
 };

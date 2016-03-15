@@ -63,3 +63,8 @@ GLuint ShaderProgram::get_attrib(std::string n)
 {
 	return glGetAttribLocation(program, n.c_str());
 }
+
+GLuint ShaderProgram::get_uniform(std::string n)
+{
+	return glGetUniformLocation(program, n.c_str());
+}

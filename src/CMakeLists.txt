@@ -18,6 +18,8 @@ find_package(GLFW REQUIRED)
 find_package(GLEW REQUIRED)
 
 include_directories(
+    .
+    ./gl
     ${GLFW_INCLUDE_DIRS}
     ${GLEW_INCLUDE_DIRS}
 )
