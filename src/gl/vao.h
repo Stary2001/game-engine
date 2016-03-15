@@ -1,0 +1,4 @@
+class VAO
+{
+	VAO();
+}
