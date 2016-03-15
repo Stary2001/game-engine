@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class ShaderException : public std::exception
 {
@@ -29,7 +31,7 @@ public:
 	void bind_frag(GLuint pos, std::string n);
 	GLuint get_attrib(std::string n);
 	GLuint get_uniform(std::string n);
-
+	template <typename T> void set_uniform(std::string n, T t);
 private:
 	GLuint program;
 };

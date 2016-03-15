@@ -68,3 +68,9 @@ GLuint ShaderProgram::get_uniform(std::string n)
 {
 	return glGetUniformLocation(program, n.c_str());
 }
+
+
+template <> void ShaderProgram::set_uniform(std::string n, glm::mat4 t)
+{
+	glUniformMatrix4fv(get_uniform(n), 1, GL_FALSE, glm::value_ptr(t));
+}

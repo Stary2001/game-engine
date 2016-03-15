@@ -34,18 +34,6 @@ int main(int argc, char **argv)
 
 	Model::ptr rect = PrimitiveGen::rect(0.1, 0.1, 0.5, 0.5);
 
-	GLuint vertexBuffer;
-	glGenBuffers(1, &vertexBuffer);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, rect->vertices.size() * sizeof(Vec2D), &rect->vertices[0], GL_STATIC_DRAW);
-
-	GLuint indexBuffer;
-	glGenBuffers(1, &indexBuffer);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, rect->indices.size() * sizeof(Vec2D), &rect->indices[0], GL_STATIC_DRAW);
-
 	GLfloat screen_width = 800.0f;
 	GLfloat screen_height = 600.0f;
 
@@ -53,9 +41,9 @@ int main(int argc, char **argv)
 	glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 1.0f, 10.0f);
 
 	glm::mat4 view = glm::lookAt(
-    glm::vec3(0.0f, 0.0f, 2.0f),
-    glm::vec3(0.0f, 0.0f, 0.0f),
-    glm::vec3(0.0f, 1.0f, 0.0f)
+    	glm::vec3(0.0f, 0.0f, 2.0f),
+    	glm::vec3(0.0f, 0.0f, 0.0f),
+    	glm::vec3(0.0f, 1.0f, 0.0f)
 	);
 
 	const char *vshader = "#version 150 \n\
@@ -85,22 +73,20 @@ void main() \n \
 	p.bind_frag(0, "outColor");
 	p.link();
 	p.use();
-
+	
+	rect->bind();
 	GLint posAttrib = p.get_attrib("position");
 	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(posAttrib);
 	
-	GLint transform = p.get_uniform("projection");
-	glUniformMatrix4fv(transform, 1, GL_FALSE, glm::value_ptr(projection));
-
-	GLint view_loc = p.get_uniform("view");
-	glUniformMatrix4fv(view_loc, 1, GL_FALSE, glm::value_ptr(view));
+	p.set_uniform("projection", projection);
+	p.set_uniform("view", view);
 
 	while(!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-		glDrawElements(GL_TRIANGLES, rect->indices.size(), GL_UNSIGNED_INT, nullptr);
+        rect->draw();
 	    glfwSwapBuffers(window);
 	    glfwPollEvents();
 	    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
