@@ -10,6 +10,7 @@
 #include <vector>
 #include "gl/shader.h"
 #include "primitive_gen.h"
+#include "util.h"
 
 int main(int argc, char **argv)
 {
@@ -46,27 +47,9 @@ int main(int argc, char **argv)
     	glm::vec3(0.0f, 1.0f, 0.0f)
 	);
 
-	const char *vshader = "#version 150 \n\
-in vec2 position; \n\
-uniform mat4 projection; \n\
-uniform mat4 view; \n\
-uniform mat4 model; \n\
-\n\
-void main()\n\
-{\n\
-    gl_Position = projection * view * vec4(position, 0.0, 1.0);\n\
-}";
-
-	const char *fshader = "#version 150 \n\
-out vec4 outColor; \n \
-void main() \n \
-{ \n \
-    outColor = vec4(1.0, 1.0, 1.0, 1.0); \n \
-}";
-	
-	Shader v(GL_VERTEX_SHADER, vshader);
+	Shader v(GL_VERTEX_SHADER, util::read_file("../shaders/vert.glsl"));
 	v.compile();
-	Shader f(GL_FRAGMENT_SHADER, fshader);
+	Shader f(GL_FRAGMENT_SHADER, util::read_file("../shaders/frag.glsl"));
 	f.compile();
 
 	ShaderProgram p(v, f);
