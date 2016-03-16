@@ -33,13 +33,12 @@ int main(int argc, char **argv)
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
-	Model::ptr rect = PrimitiveGen::rect(0.1, 0.1, 0.5, 0.5);
+	Model::ptr shape = PrimitiveGen::circle(0.0f, 0.0f, 0.1f);
 
 	GLfloat screen_width = 800.0f;
 	GLfloat screen_height = 600.0f;
 
-	//glm::mat4 projection = glm::ortho(0.0f, 1.0f, 0.0f, 1.0f);
-	glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 1.0f, 10.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(45.0f), screen_width / screen_height, 1.0f, 10.0f);
 
 	glm::mat4 view = glm::lookAt(
     	glm::vec3(0.0f, 0.0f, 2.0f),
@@ -57,7 +56,7 @@ int main(int argc, char **argv)
 	p.link();
 	p.use();
 	
-	rect->bind();
+	shape->bind();
 	GLint posAttrib = p.get_attrib("position");
 	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(posAttrib);
@@ -69,7 +68,7 @@ int main(int argc, char **argv)
 	{
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        rect->draw();
+        shape->draw();
 	    glfwSwapBuffers(window);
 	    glfwPollEvents();
 	    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
