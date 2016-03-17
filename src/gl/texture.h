@@ -30,7 +30,7 @@ public:
 		LinearMipmapLinear = GL_LINEAR_MIPMAP_LINEAR
 	};
 
-	Texture(std::string filename, Texture::RepeatMode wrap = RepeatMode::Repeat, Texture::FilterMode filter = FilterMode::Linear);
+	Texture(std::string filename, Texture::RepeatMode wrap = RepeatMode::ClampEdge, Texture::FilterMode filter = FilterMode::Linear);
 	void bind();
 private:
 	std::vector<unsigned char> pixels;
@@ -38,4 +38,6 @@ private:
 	unsigned int height;
 
 	GLuint gl_tex;
+
+	void flip();
 };

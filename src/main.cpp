@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
-	Model::ptr shape = PrimitiveGen::rect(0.0f, 0.0f, 0.1f, 0.1f);
+	Model::ptr shape = PrimitiveGen::rect(-0.5f, -0.5f, 1.0f, 1.0f);
 
 	GLfloat screen_width = 800.0f;
 	GLfloat screen_height = 600.0f;
@@ -54,23 +54,25 @@ int main(int argc, char **argv)
 
 	ShaderProgram p(v, f);
 	p.bind_frag(0, "outColor");
+	p.bind_frag(1, "texcoord");
 	p.link();
 	p.use();
 	
 	shape->bind();
+	
 	GLint posAttrib = p.get_attrib("position");
 	GLint texAttrib = p.get_attrib("texcoord");
-
-	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, (2*sizeof(float)), (void*)(2 * sizeof(float)));
 	glEnableVertexAttribArray(posAttrib);
 	glEnableVertexAttribArray(texAttrib);
+
+	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, (4*sizeof(GLfloat)), 0);
+	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, (4*sizeof(GLfloat)), (void*)(2 * sizeof(GLfloat)));
 
 	Texture::ptr t = std::make_shared<Texture>("../checkers.png");
 
 	p.set_uniform("projection", projection);
 	p.set_uniform("view", view);
-	p.set_uniform("tex", t);
+	//p.set_uniform("tex", t);
 
 	while(!glfwWindowShouldClose(window))
 	{

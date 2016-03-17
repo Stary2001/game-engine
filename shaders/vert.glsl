@@ -1,4 +1,5 @@
 #version 150
+
 in vec2 position;
 in vec2 texcoord;
 
