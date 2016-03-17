@@ -11,8 +11,9 @@ namespace PrimitiveGen
 	std::unique_ptr<Model> rect(GLfloat x, GLfloat y, GLfloat w, GLfloat h)
 	{
 		std::vector<Vec2D> verts = { {x, y}, {x + w, y}, {x + w, y + h}, {x, y + h} };
+		std::vector<Vec2D> uvs = { {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
 		std::vector<uint32_t> indices = {0, 1, 2, 0, 2, 3};
-		Model::ptr m = util::make_unique<Model>(verts, indices);
+		Model::ptr m = util::make_unique<Model>(verts, uvs, indices);
 
 		return m;
 	}

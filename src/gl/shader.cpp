@@ -1,6 +1,7 @@
 #include <string>
 #include <GL/glew.h>
 #include "shader.h"
+#include "texture.h"
 
 Shader::Shader(GLenum type, std::string src)
 {
@@ -73,4 +74,9 @@ GLuint ShaderProgram::get_uniform(std::string n)
 template <> void ShaderProgram::set_uniform(std::string n, glm::mat4 t)
 {
 	glUniformMatrix4fv(get_uniform(n), 1, GL_FALSE, glm::value_ptr(t));
+}
+
+template <> void ShaderProgram::set_uniform(std::string n, Texture::ptr t)
+{
+	glUniform1i(get_uniform(n), t->gl_tex);
 }

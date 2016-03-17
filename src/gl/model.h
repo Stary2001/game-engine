@@ -15,6 +15,8 @@ public:
 private:
 	void init();
 
+	std::vector<float> buf;
+
 	std::vector<Vec2D> vertices;
 	std::vector<Vec2D> uvs;
 	std::vector<uint32_t> indices;

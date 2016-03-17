@@ -11,6 +11,7 @@
 #include "gl/shader.h"
 #include "primitive_gen.h"
 #include "util.h"
+#include "gl/texture.h"
 
 int main(int argc, char **argv)
 {
@@ -33,7 +34,7 @@ int main(int argc, char **argv)
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
-	Model::ptr shape = PrimitiveGen::circle(0.0f, 0.0f, 0.1f);
+	Model::ptr shape = PrimitiveGen::rect(0.0f, 0.0f, 0.1f, 0.1f);
 
 	GLfloat screen_width = 800.0f;
 	GLfloat screen_height = 600.0f;
@@ -58,11 +59,18 @@ int main(int argc, char **argv)
 	
 	shape->bind();
 	GLint posAttrib = p.get_attrib("position");
+	GLint texAttrib = p.get_attrib("texcoord");
+
 	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, (2*sizeof(float)), (void*)(2 * sizeof(float)));
 	glEnableVertexAttribArray(posAttrib);
-	
+	glEnableVertexAttribArray(texAttrib);
+
+	Texture::ptr t = std::make_shared<Texture>("../checkers.png");
+
 	p.set_uniform("projection", projection);
 	p.set_uniform("view", view);
+	p.set_uniform("tex", t);
 
 	while(!glfwWindowShouldClose(window))
 	{

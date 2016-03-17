@@ -13,17 +13,19 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 file(GLOB_RECURSE SOURCES "*.cpp")
+file(GLOB_RECURSE EXT_SOURCES "../ext/*.cpp")
 
 find_package(GLFW REQUIRED)
 find_package(GLEW REQUIRED)
 
 include_directories(
     .
+    ../ext
     ./gl
     ${GLFW_INCLUDE_DIRS}
     ${GLEW_INCLUDE_DIRS}
 )
 
-add_executable(game ${SOURCES})
+add_executable(game ${SOURCES} ${EXT_SOURCES})
 
 target_link_libraries(game GLEW glfw GL)
