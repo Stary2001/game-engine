@@ -10,17 +10,18 @@ void Model::init()
 
 	bind();
 
-	buf.resize(vertices.size() * 4);
+	buf.resize(vertices.size() * 5);
 	uvs.resize(vertices.size()); // HACK: these should match anyway, but just in case
 
 	unsigned int i = 0;
 	for(; i < vertices.size(); i++)
 	{
-		int ofs = i * 4;
+		int ofs = i * 5;
 		buf[ofs] = vertices[i].x;
 		buf[ofs + 1] = vertices[i].y;
-		buf[ofs + 2] = uvs[i].s;
-		buf[ofs + 3] = uvs[i].t;
+		buf[ofs + 2] = vertices[i].z;
+		buf[ofs + 3] = uvs[i].s;
+		buf[ofs + 4] = uvs[i].t;
 	}
 
 	glBufferData(GL_ARRAY_BUFFER, buf.size() * sizeof(float), &buf[0], GL_STATIC_DRAW);

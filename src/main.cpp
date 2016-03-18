@@ -41,6 +41,8 @@ int main(int argc, char **argv)
 
 	glm::mat4 projection = glm::perspective(glm::radians(45.0f), screen_width / screen_height, 1.0f, 10.0f);
 
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.0f));
+
 	glm::mat4 view = glm::lookAt(
     	glm::vec3(0.0f, 0.0f, 2.0f),
     	glm::vec3(0.0f, 0.0f, 0.0f),
@@ -65,13 +67,14 @@ int main(int argc, char **argv)
 	glEnableVertexAttribArray(posAttrib);
 	glEnableVertexAttribArray(texAttrib);
 
-	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, (4*sizeof(GLfloat)), 0);
-	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, (4*sizeof(GLfloat)), (void*)(2 * sizeof(GLfloat)));
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, (5*sizeof(GLfloat)), 0);
+	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, (5*sizeof(GLfloat)), (void*)(3 * sizeof(GLfloat)));
 
 	Texture::ptr t = std::make_shared<Texture>("../checkers.png");
 
 	p.set_uniform("projection", projection);
 	p.set_uniform("view", view);
+	p.set_uniform("model", model);
 	//p.set_uniform("tex", t);
 
 	while(!glfwWindowShouldClose(window))
@@ -81,6 +84,10 @@ int main(int argc, char **argv)
         shape->draw();
 	    glfwSwapBuffers(window);
 	    glfwPollEvents();
+
+	    model = glm::rotate(model, (float)(M_PI / 100.0f), Vec3D(0.0f, 1.0f, 0.0f));
+	    p.set_uniform("model", model);
+
 	    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
