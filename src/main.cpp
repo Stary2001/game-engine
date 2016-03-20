@@ -1,3 +1,6 @@
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -38,7 +41,6 @@ int main(int argc, char **argv)
 	glEnable(GL_DEPTH_TEST);
 
 	Model::ptr shape = OBJ::load("../cube.obj");
-	//PrimitiveGen::rect(-0.5f, -0.5f, 1.0f, 1.0f);
 
 	GLfloat screen_width = 800.0f;
 	GLfloat screen_height = 600.0f;
