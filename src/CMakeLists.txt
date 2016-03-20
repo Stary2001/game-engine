@@ -13,10 +13,12 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 file(GLOB_RECURSE SOURCES "*.cpp")
-file(GLOB_RECURSE EXT_SOURCES "../ext/*.cpp")
+file(GLOB_RECURSE EXT_PHYSFSCPP_SOURCES "../ext/physfs-cpp/src/*.cpp")
+set(EXT_LODEPNG_SOURCES "../ext/lodepng.cpp")
 
 find_package(GLFW REQUIRED)
 find_package(GLEW REQUIRED)
+find_package(PhysFS REQUIRED)
 
 if (WIN32)
   set(OPENGL_LIBRARY "opengl32")
@@ -27,12 +29,14 @@ endif()
 include_directories(
     .
     ../ext
-    ./gl
+    ../ext/physfs-cpp/include
+    gl
+    ${PHYSFS_INCLUDE_DIR}
     ${GLFW_INCLUDE_DIR}
     ${GLEW_INCLUDE_DIRS}
     ${GLM_INCLUDE_DIR}
 )
 
-add_executable(game ${SOURCES} ${EXT_SOURCES})
+add_executable(game ${SOURCES} ${EXT_PHYSFSCPP_SOURCES} ${EXT_LODEPNG_SOURCES})
 
-target_link_libraries(game ${GLFW_glfw_LIBRARY} ${GLEW_LIBRARY} ${OPENGL_LIBRARY})
+target_link_libraries(game ${GLFW_glfw_LIBRARY} ${GLEW_LIBRARY} ${PHYSFS_LIBRARY} ${OPENGL_LIBRARY})

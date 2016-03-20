@@ -11,5 +11,7 @@ namespace util
 	}
 
 	std::string read_file(std::string path);
+	std::vector<unsigned char> read_file_bytes(std::string path);
+
 	std::vector<std::string> split(const std::string& s, const std::string& delim, const bool keep_empty = true);
-}  
+}

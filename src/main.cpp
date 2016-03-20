@@ -17,8 +17,14 @@
 #include "gl/texture.h"
 #include "obj.h"
 
+#include "physfs.hpp"
+
 int main(int argc, char **argv)
 {
+	PhysFS::init(argv[0]);
+	PhysFS::mount("./res.zip", "/", true);
+	PhysFS::mount("./res", "/", true);
+
     glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -40,7 +46,7 @@ int main(int argc, char **argv)
 
 	glEnable(GL_DEPTH_TEST);
 
-	Model::ptr shape = OBJ::load("../cube.obj");
+	Model::ptr shape = OBJ::load("cube.obj");
 
 	GLfloat screen_width = 800.0f;
 	GLfloat screen_height = 600.0f;
@@ -56,9 +62,9 @@ int main(int argc, char **argv)
     	glm::vec3(0.0f, 1.0f, 0.0f)
 	);
 
-	Shader v(GL_VERTEX_SHADER, util::read_file("../shaders/vert.glsl"));
+	Shader v(GL_VERTEX_SHADER, util::read_file("shaders/vert.glsl"));
 	v.compile();
-	Shader f(GL_FRAGMENT_SHADER, util::read_file("../shaders/frag.glsl"));
+	Shader f(GL_FRAGMENT_SHADER, util::read_file("shaders/frag.glsl"));
 	f.compile();
 
 	ShaderProgram p(v, f);
@@ -81,7 +87,7 @@ int main(int argc, char **argv)
 	glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, GL_FALSE, (8*sizeof(GLfloat)), (void*)(3 * sizeof(GLfloat)));
 	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, (8*sizeof(GLfloat)), (void*)(6 * sizeof(GLfloat)));
 
-	Texture::ptr t = std::make_shared<Texture>("../checkers.png");
+	Texture::ptr t = std::make_shared<Texture>("placeholder.png");
 
 	p.set_uniform("projection", projection);
 	p.set_uniform("view", view);
@@ -104,4 +110,5 @@ int main(int argc, char **argv)
 	}
 
     glfwTerminate();
+    PhysFS::deinit();
 }

@@ -2,11 +2,12 @@
 #include <GL/glew.h>
 #include "texture.h"
 #include "lodepng.h"
-
+#include "util.h"
 
 Texture::Texture(std::string filename, Texture::RepeatMode wrap, Texture::FilterMode filter)
 {
-	unsigned int error = lodepng::decode(pixels, width, height, filename, LCT_RGBA, 8);
+	std::vector<unsigned char> png = util::read_file_bytes("placeholder.png");
+	unsigned int error = lodepng::decode(pixels, width, height, png, LCT_RGBA, 8);
 
 	flip();
 

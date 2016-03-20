@@ -1,0 +1,3 @@
+[submodule "ext/physfs-cpp"]
+	path = ext/physfs-cpp
+	url = https://github.com/kahowell/physfs-cpp.git

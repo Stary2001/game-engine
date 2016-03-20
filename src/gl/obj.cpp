@@ -1,5 +1,4 @@
-#include <iostream>
-#include <fstream>
+#include <sstream>
 #include <stdint.h>
 #include <algorithm>
 
@@ -12,7 +11,8 @@
 
 Model::ptr OBJ::load(std::string filename)
 {
-	std::ifstream file(filename, std::ifstream::in);
+	std::string file_contents = util::read_file(filename);
+	std::stringstream file(file_contents);
 
 	std::string line;
 
@@ -28,7 +28,6 @@ Model::ptr OBJ::load(std::string filename)
 
 	while(std::getline(file, line))
 	{
-		std::cout << line << std::endl;
 		if(line[0] != '#' && line.size() > 2)
 		{
 			std::string dat = line.substr(2);
