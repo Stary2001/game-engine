@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
-	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 
 	Model::ptr shape = OBJ::load("../cube.obj");
 	//PrimitiveGen::rect(-0.5f, -0.5f, 1.0f, 1.0f);
@@ -68,12 +68,16 @@ int main(int argc, char **argv)
 	shape->bind();
 	
 	GLint posAttrib = p.get_attrib("position");
+	GLint normalAttrib = p.get_attrib("normal");
 	GLint texAttrib = p.get_attrib("texcoord");
+
 	glEnableVertexAttribArray(posAttrib);
+	glEnableVertexAttribArray(normalAttrib);
 	glEnableVertexAttribArray(texAttrib);
 
-	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, (5*sizeof(GLfloat)), 0);
-	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, (5*sizeof(GLfloat)), (void*)(3 * sizeof(GLfloat)));
+	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, (8*sizeof(GLfloat)), 0);
+	glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, GL_FALSE, (8*sizeof(GLfloat)), (void*)(3 * sizeof(GLfloat)));
+	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, (8*sizeof(GLfloat)), (void*)(6 * sizeof(GLfloat)));
 
 	Texture::ptr t = std::make_shared<Texture>("../checkers.png");
 
@@ -81,7 +85,6 @@ int main(int argc, char **argv)
 	p.set_uniform("view", view);
 	p.set_uniform("model", model);
 	//p.set_uniform("tex", t);
-	glDisable(GL_CULL_FACE);
 
 	while(!glfwWindowShouldClose(window))
 	{

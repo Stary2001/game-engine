@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdint.h>
+#include <algorithm>
 
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -22,6 +23,8 @@ Model::ptr OBJ::load(std::string filename)
 	std::vector<int> vert_indices;
 	std::vector<int> normal_indices;
 	std::vector<int> tex_indices;
+
+	std::vector<Vertex> unique_vertices;
 
 	while(std::getline(file, line))
 	{
@@ -107,24 +110,29 @@ Model::ptr OBJ::load(std::string filename)
 		}
 	}
 
-
 	int i = 0;
-	std::vector<Vec3D> verts;
-	std::vector<Vec3D> normals;
-	std::vector<Vec2D> texcoords;
 	std::vector<uint32_t> indices;
 
 	for(; i < vert_indices.size(); i++)
 	{
-		verts.push_back(temp_verts[vert_indices[i] - 1]);
-		if(temp_normals.size() != 0)
-			normals.push_back(temp_normals[normal_indices[i] - 1]);
+		Vec3D v = temp_verts[vert_indices[i] - 1];
+		Vec3D n = (temp_normals.size() != 0) ? temp_normals[normal_indices[i] - 1] : Vec3D(0,0,0);
+		Vec2D t = (temp_tex.size() != 0) ? temp_tex[tex_indices[i] - 1] : Vec2D(0,0);
 
-		if(temp_tex.size() != 0)
-		texcoords.push_back(temp_tex[tex_indices[i] - 1]);
-		indices.push_back(i);
+		Vertex v_ = Vertex(v, n, t);
+
+		std::vector<Vertex>::iterator it = std::find(unique_vertices.begin(), unique_vertices.end(), v_);
+		if(it == unique_vertices.end())
+		{
+			unique_vertices.push_back(v_);
+			indices.push_back(unique_vertices.size() - 1);
+		}
+		else
+		{
+			indices.push_back(it - unique_vertices.begin());
+		}
 	}
 
-	Model::ptr p = util::make_unique<Model>(verts, texcoords, indices);
+	Model::ptr p = util::make_unique<Model>(unique_vertices, indices);
 	return p;
 }

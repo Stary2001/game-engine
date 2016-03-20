@@ -3,11 +3,25 @@
 #include <vector>
 #include <memory>
 
+struct Vertex
+{
+	Vertex() {}
+	Vertex(Vec3D v_) { v=v_; }
+	Vertex(Vec3D v_, Vec3D n_) { v=v_; n=n_; }
+	Vertex(Vec3D v_, Vec2D t_) { v=v_; t=t_; }
+	Vertex(Vec3D v_, Vec3D n_, Vec2D t_) { v=v_; n=n_; t=t_; }
+	Vec3D v;
+	Vec3D n;
+	Vec2D t;
+};
+
+inline bool operator==(const Vertex& lhs, const Vertex& rhs) 
+{ return lhs.v == rhs.v && lhs.n == rhs.n && lhs.t == rhs.t; }
+
 class Model
 {
 public:
-	Model(std::vector<Vec3D> v, std::vector<uint32_t> i) : vertices(v), indices(i) { init(); }
-	Model(std::vector<Vec3D> v, std::vector<Vec2D> u, std::vector<uint32_t> i) : vertices(v), uvs(u), indices(i) { init(); }
+	Model(std::vector<Vertex> v, std::vector<uint32_t> i);
 	typedef std::unique_ptr<Model> ptr;
 
 	void draw();
@@ -15,10 +29,7 @@ public:
 private:
 	void init();
 
-	std::vector<float> buf;
-
-	std::vector<Vec3D> vertices;
-	std::vector<Vec2D> uvs;
+	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
 
 	GLuint index_buffer;
