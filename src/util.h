@@ -1,5 +1,7 @@
 #pragma once
 #include <memory>
+#include <vector>
+#include <string>
 
 namespace util
 {
@@ -9,4 +11,5 @@ namespace util
 	}
 
 	std::string read_file(std::string path);
-}
+	std::vector<std::string> split(const std::string& s, const std::string& delim, const bool keep_empty = true);
+}  

@@ -12,6 +12,7 @@
 #include "primitive_gen.h"
 #include "util.h"
 #include "gl/texture.h"
+#include "obj.h"
 
 int main(int argc, char **argv)
 {
@@ -34,17 +35,21 @@ int main(int argc, char **argv)
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
-	Model::ptr shape = PrimitiveGen::rect(-0.5f, -0.5f, 1.0f, 1.0f);
+	//glEnable(GL_DEPTH_TEST);
+
+	Model::ptr shape = OBJ::load("../cube.obj");
+	//PrimitiveGen::rect(-0.5f, -0.5f, 1.0f, 1.0f);
 
 	GLfloat screen_width = 800.0f;
 	GLfloat screen_height = 600.0f;
 
-	glm::mat4 projection = glm::perspective(glm::radians(45.0f), screen_width / screen_height, 1.0f, 10.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(45.0f), screen_width / screen_height, 0.1f, 100.0f);
 
-	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.0f));
+	//glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.0f));
+	glm::mat4 model;
 
 	glm::mat4 view = glm::lookAt(
-    	glm::vec3(0.0f, 0.0f, 2.0f),
+    	glm::vec3(4.0f, 3.0f, 3.0f),
     	glm::vec3(0.0f, 0.0f, 0.0f),
     	glm::vec3(0.0f, 1.0f, 0.0f)
 	);
@@ -76,11 +81,12 @@ int main(int argc, char **argv)
 	p.set_uniform("view", view);
 	p.set_uniform("model", model);
 	//p.set_uniform("tex", t);
+	glDisable(GL_CULL_FACE);
 
 	while(!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         shape->draw();
 	    glfwSwapBuffers(window);
 	    glfwPollEvents();
