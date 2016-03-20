@@ -9,6 +9,42 @@
 #include "util.h"
 #include "obj.h"
 
+void do_index(std::string idx, std::vector<int> &vert_indices, std::vector<int> &normal_indices, std::vector<int> &tex_indices)
+{
+	auto a = util::split(idx, "/");
+	if(a.size() == 3)
+	{
+		vert_indices.push_back(std::stoi(a[0]));
+		if(a[1] != "") tex_indices.push_back(std::stoi(a[1]));
+		normal_indices.push_back(std::stoi(a[2]));
+	}
+	else if(a.size() == 2)
+	{
+		vert_indices.push_back(std::stoi(a[0]));
+		tex_indices.push_back(std::stoi(a[1]));
+	}
+	else if(a.size() == 1)
+	{
+		vert_indices.push_back(std::stoi(a[0]));
+	}
+}
+
+void triangulate(std::vector<std::string> indices, std::vector<int> &verts, std::vector<int> &normals, std::vector<int> &tex)
+{
+	int i = 1;
+
+	// a polygon of x sides decomposes into x-2 tris
+
+	// todo: does this make clockwise triangles??
+
+	for(; i <= indices.size() - 2; i++) 
+	{
+		do_index(indices[0], verts, normals, tex);
+		do_index(indices[i], verts, normals, tex);
+		do_index(indices[i+1], verts, normals, tex);
+	}
+}
+
 Model::ptr OBJ::load(std::string filename)
 {
 	std::string file_contents = util::read_file(filename);
@@ -78,7 +114,7 @@ Model::ptr OBJ::load(std::string filename)
 						auto vecs = util::split(dat, " ", false);
 						if(vecs.size() != 3)
 						{
-							throw std::exception();
+							triangulate(vecs, vert_indices, normal_indices, tex_indices);
 						}
 						else
 						{
@@ -115,8 +151,8 @@ Model::ptr OBJ::load(std::string filename)
 	for(; i < vert_indices.size(); i++)
 	{
 		Vec3D v = temp_verts[vert_indices[i] - 1];
-		Vec3D n = (temp_normals.size() != 0) ? temp_normals[normal_indices[i] - 1] : Vec3D(0,0,0);
-		Vec2D t = (temp_tex.size() != 0) ? temp_tex[tex_indices[i] - 1] : Vec2D(0,0);
+		Vec3D n = (temp_normals.size() != 0 && normal_indices.size() != 0) ? temp_normals[normal_indices[i] - 1] : Vec3D(0,0,0);
+		Vec2D t = (temp_tex.size() != 0 && tex_indices.size() != 0) ? temp_tex[tex_indices[i] - 1] : Vec2D(0,0);
 
 		Vertex v_ = Vertex(v, n, t);
 
